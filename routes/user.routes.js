@@ -21,7 +21,17 @@ router.route('/check').post((req,res,next) => {
     if (!decodedToken) {
         res.status(401).json({ message: 'unauthorized' });
     } else {
-        res.status(200).json({ message: 'here is your resource' , "token":decodedToken});
+        user.find({'email':decodedToken.email},(error,data)=>{
+            if(error){
+                return res.status(404).json({message: "user not found"});
+            } else{
+                // password hash
+                if(data.length == 0)
+                    return res.status(404).json({message: "user not found"});
+                res.status(200).json({ message: 'here is your resource' , "user":data[0]});
+            }
+        });    
+        
     };
 });
 
