@@ -10,11 +10,8 @@ let reaction = require('../models/reaction-schema');
 
 //check Login
 router.route('/check').post((req,res,next) => {
-    const authHeader = req.get("Authorization");
-    if (!authHeader) {
-        return res.status(401).json({ message: 'not authenticated' });
-    };
-    const token = authHeader.split(' ')[1];
+
+    const token = req.body.token;
     
     try {
         decodedToken = jwt.verify(token, 'secret');
