@@ -95,7 +95,7 @@ router.route('/signin').post((req, res, next) => {
 
 //reset password by forgot
 router.route('/reset_password').post((req, res, next) => {
-    bcrypt.hash("PikselParty", 12, (err, passwordHash) => {
+    bcrypt.hash("123456", 12, (err, passwordHash) => {
         if(err){
             return res.status(500).json({message: "could not hash the password"}); 
         }
