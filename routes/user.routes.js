@@ -145,6 +145,22 @@ router.route('/getReaction').post((req,res,next) => {
     });
 });
 
+//add reaction_data
+router.route('/addReaction').post((req,res,next) => {
+    reaction.create({
+        email:req.body.email,
+        react_email:req.body.react_email,
+        react_name:req.body.react_name,
+        type:req.body.type
+    }, (error, data) => {
+        if (error) {
+            res.status(502).json({message: "error while creating user"});
+        } else {
+            res.status(200).json({message:"Add success~!"})
+        }
+    })
+});
+
 //get followed user list
 router.route('/get_users').post((req, res, next) => {
     const follow_list = req.body;
