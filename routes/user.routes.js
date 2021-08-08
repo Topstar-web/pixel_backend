@@ -133,7 +133,7 @@ router.route('/update_photo').post((req, res, next) => {
     });
 });
 
-//get profile_data
+//get reaction_data
 router.route('/getReaction').post((req,res,next) => {
     reaction.find({'email':req.body.email},(error,data)=>{
         if(error){
