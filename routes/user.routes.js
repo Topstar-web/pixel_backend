@@ -134,7 +134,7 @@ router.route('/update_photo').post((req, res, next) => {
 });
 
 //get profile_data
-router.route('/get_profile_data').post((req,res,next) => {
+router.route('/getReaction').post((req,res,next) => {
     reaction.find({'email':req.body.email},(error,data)=>{
         if(error){
             return res.status(404).json({message: "user not found"});
