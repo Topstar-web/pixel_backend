@@ -12,7 +12,7 @@ let reactionSchema = new Schema({
         type: String
     },
     type: {
-        type: String
+        type: Int32
     }
 }, {
         collection: 'reactions'
