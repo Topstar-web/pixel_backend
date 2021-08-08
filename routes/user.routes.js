@@ -125,9 +125,14 @@ router.route('/update_photo').post((req, res, next) => {
             //update successed, then change new statuses of following me
             user.updateMany({'follow_list.name':req.body.name},{'$set':{'follow_list.$.new':true}},(error,data)=>{
                 if(error)
-                    return res.status(500).json({message: "error while change new status"});
-                console.log("change_new",data);
+                    return res.status(500).json({message: "error while updating photo"});
             });
+
+            //reset reactions
+            reaction.remove({'email':req.body.name},(error,data)=>{
+                if(error)
+                    return res.status(500).json({message: "error while reseting reactions"});
+            })
             return res.status(200).json({message:"success"});
         }
     });
