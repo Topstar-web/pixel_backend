@@ -162,7 +162,7 @@ router.route('/getReactionHistory').post((req,res,next) => {
             foreignField: "email",
             as: "user"
         }
-    }]);
+    }]).exec();
     return res.status(200).json({"data":data});
 });
 
