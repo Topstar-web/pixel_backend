@@ -152,7 +152,11 @@ router.route('/getReactionHistory').post((req,res,next) => {
     //     as: "user"
     // })
     // .exec();
-    reaction.aggregate([{
+    reaction.aggregate([
+    {
+        $group : {_id : {email: "$email",react_email:"$react_email",type:"$type"},total: { $sum: "$amount" }}
+    },
+    {
         $match: {
             email: req.body.email,
             type:req.body.type
