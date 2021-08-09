@@ -152,21 +152,21 @@ router.route('/getReactionHistory').post((req,res,next) => {
     //     as: "user"
     // })
     // .exec();
-    // ,  {
-    //     $lookup: {
-    //         from: "users",
-    //         localField: "react_email",
-    //         foreignField: "email",
-    //         as: "user"
-    //     }
-    // }
-    var data = reaction.aggregate([{
+    reaction.aggregate([{
         $match: {
             email: req.body.email,
             type:req.body.type
         }
-    }]).exec();
-    return res.status(200).json({"data":data});
+    },  {
+        $lookup: {
+            from: "users",
+            localField: "react_email",
+            foreignField: "email",
+            as: "user"
+        }
+    }]).exec((err,data)=>{
+        res.status(200).json({"data":data});
+    });
 });
 
 //get reaction_data
