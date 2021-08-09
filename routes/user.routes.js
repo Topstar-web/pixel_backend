@@ -140,14 +140,35 @@ router.route('/update_photo').post((req, res, next) => {
 
 //get reaction_history
 router.route('/getReactionHistory').post((req,res,next) => {
-    reaction.find({'email':req.body.email,'type':req.body.type},(error,data)=>{
+    // reaction.find({'email':req.body.email,'type':req.body.type},(error,data)=>{
+    //     if(error){
+    //         return res.status(404).json({message: "user not found"});
+    //     } else{
+    //        console.log("get_reaction_history",data);
+    //        res.status(200).json({"data":data});
+    //     }   
+    // });
+    reaction.aggregate({
+        $match: {
+            "email": req.body.email,
+            'type':req.body.type
+        }
+    }, {
+        $unwind: "$email"
+    }, {
+        $lookup: {
+            from: "users",
+            localField: "email",
+            foreignField: "email",
+            as: "user"
+        }
+    }).toArray(function(err ,res) {
         if(error){
-            return res.status(404).json({message: "user not found"});
+            return res.status(404).json({message: "error"});
         } else{
-           console.log("get_reaction_history",data);
-           res.status(200).json({"data":data});
-        }   
-    });
+            res.status(200).json({"data":res});
+        }  
+    })
 });
 
 //get reaction_data
