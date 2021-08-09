@@ -162,13 +162,13 @@ router.route('/getReactionHistory').post((req,res,next) => {
             foreignField: "email",
             as: "user"
         }
-    }],(error,res) => {
-            if(error){
-                return res.status(404).json({message: "error"});
-            } else{
-                res.status(200).json({"data":res});
-            }  
-    });
+    }]),(error,res) => {
+        if(error){
+            return res.status(404).json({message: "error"});
+        } else{
+            res.status(200).json({"data":res});
+        }  
+    };
 });
 
 //get reaction_data
