@@ -158,8 +158,8 @@ router.route('/getReactionHistory').post((req,res,next) => {
     }, {
         $lookup: {
             from: "users",
-            localField: "react_email",
-            foreignField: "email",
+            localField: "email",
+            foreignField: "react_email",
             as: "user"
         }
     }]).exec();
