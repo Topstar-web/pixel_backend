@@ -138,8 +138,8 @@ router.route('/update_photo').post((req, res, next) => {
     });
 });
 
-//get reaction_data
-router.route('/getReaction').post((req,res,next) => {
+//get reaction_history
+router.route('/getReactionHistory').post((req,res,next) => {
     reaction.find({'email':req.body.email,'type':req.body.type},(error,data)=>{
         if(error){
             return res.status(404).json({message: "user not found"});
@@ -150,8 +150,8 @@ router.route('/getReaction').post((req,res,next) => {
     });
 });
 
-//get reaction_history
-router.route('/getReactionHistory').post((req,res,next) => {
+//get reaction_data
+router.route('/getReaction').post((req,res,next) => {
     reaction.find({'email':req.body.email},(error,data)=>{
         if(error){
             return res.status(404).json({message: "user not found"});
