@@ -186,7 +186,6 @@ router.route('/addReaction').post((req,res,next) => {
     reaction.create({
         email:req.body.email,
         react_email:req.body.react_email,
-        react_name:req.body.react_name,
         type:req.body.type
     }, (error, data) => {
         if (error) {
