@@ -168,7 +168,7 @@ router.route('/getReactionHistory').post((req,res,next) => {
                 foreignField: "email",
                 as: "user"
             }
-        },{ $sort: { count: 1 } }]).exec((err,data)=>{
+        },{ $sort: { count: -1 } }]).exec((err,data)=>{
             res.status(200).json({"data":data});
         });
 });
