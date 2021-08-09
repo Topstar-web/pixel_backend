@@ -140,18 +140,6 @@ router.route('/update_photo').post((req, res, next) => {
 
 //get reaction_history
 router.route('/getReactionHistory').post((req,res,next) => {
-    // const data = await reaction.aggregate()
-    // .match({
-    //     email: req.body.email,
-    //     type:req.body.type
-    // })
-    // .lookup({
-    //     from: "users",
-    //     localField: "react_email",
-    //     foreignField: "email",
-    //     as: "user"
-    // })
-    // .exec();
     reaction.aggregate([
         {
             $match: {
@@ -168,7 +156,7 @@ router.route('/getReactionHistory').post((req,res,next) => {
                 as: "user"
             }
         },{ $sort: { count: -1 } }]).exec((err,data)=>{
-            res.status(200).json({"data":data});
+            return res.status(200).json({"data":data});
         });
 });
 
@@ -178,8 +166,7 @@ router.route('/getReaction').post((req,res,next) => {
         if(error){
             return res.status(404).json({message: "user not found"});
         } else{
-           console.log("get_reaction_data",data);
-           res.status(200).json({"data":data});
+           return res.status(200).json({"data":data});
         }   
     });
 });
@@ -227,9 +214,19 @@ router.route('/get_users').post((req, res, next) => {
             }
                 
         });
-    });
+    });   
+});
 
-    
+//get whole user list
+router.route('/getUserList').post((req, res, next) => {
+    user.find({},(error,data)=>{
+        if(error){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            return res.status(200).json({"data":data});
+        }
+            
+    });
 });
 
 module.exports = router;
