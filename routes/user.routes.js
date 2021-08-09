@@ -160,7 +160,7 @@ router.route('/getReactionHistory').post((req,res,next) => {
             }
         },
         {
-            $group : {_id : {react_email:"$react_email"},total: { $sum: "$amount" }}
+            $group : {_id : {react_email:"$react_email"},count:{$sum:1}}
         },  {
             $lookup: {
                 from: "users",
