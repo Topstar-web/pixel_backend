@@ -8,9 +8,6 @@ let reactionSchema = new Schema({
     react_email:{
         type: String
     },
-    react_name: {
-        type: String
-    },
     type: {
         type: Number
     }

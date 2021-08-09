@@ -154,15 +154,15 @@ router.route('/getReactionHistory').post((req,res,next) => {
             'type':req.body.type
         }
     }, {
-        $unwind: "$email"
+        $unwind: "$react_email"
     }, {
         $lookup: {
             from: "users",
-            localField: "email",
+            localField: "react_email",
             foreignField: "email",
             as: "user"
         }
-    }]).toArray(function(err ,res) {
+    }]).exec(function(err ,res) {
         if(error){
             return res.status(404).json({message: "error"});
         } else{
