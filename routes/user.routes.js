@@ -148,7 +148,7 @@ router.route('/getReactionHistory').post((req,res,next) => {
     //        res.status(200).json({"data":data});
     //     }   
     // });
-    reaction.aggregate([{
+    var data = reaction.aggregate([{
         $match: {
             "email": req.body.email,
             'type':req.body.type
@@ -162,13 +162,8 @@ router.route('/getReactionHistory').post((req,res,next) => {
             foreignField: "email",
             as: "user"
         }
-    }]),(error,res) => {
-        if(error){
-            return res.status(404).json({message: "error"});
-        } else{
-            res.status(200).json({"data":res});
-        }  
-    };
+    }]);
+    return res.status(200).json({"data":data});
 });
 
 //get reaction_data
