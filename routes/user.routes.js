@@ -153,13 +153,11 @@ router.route('/getReactionHistory').post((req,res,next) => {
             "email": req.body.email,
             'type':req.body.type
         }
-    }, {
-        $unwind: "$react_email"
-    }, {
+    },  {
         $lookup: {
             from: "users",
-            localField: "email",
-            foreignField: "react_email",
+            localField: "react_email",
+            foreignField: "email",
             as: "user"
         }
     }]).exec();
