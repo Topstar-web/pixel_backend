@@ -19,10 +19,6 @@ let userSchema = new Schema({
         type: Boolean,
         default: true //public
     },
-    reactions: {
-        type:Array,
-        default:[0,0,0,0,0,0]
-    },
     follow_list: {
         type:Array
     }
