@@ -188,33 +188,41 @@ router.route('/addReaction').post((req,res,next) => {
 
 //get followed user list
 router.route('/get_users').post((req, res, next) => {
-    const follow_list = req.body;
+    // const follow_list = req.body;
     let feed_list = [];
     let count = 0;
-    follow_list.forEach((item,key) => {
-        user.find({'email':item.name},(error,data)=>{
-            if(error){
-                return res.status(404).json({message: "user not found"});
-            } else if(data.length == 0)
-            {
-                return res.status(404).json({message: "user not found"});
-            } else{
-                feed_list[key] = {
-                    'photo':data[0].photo,
-                    'name':data[0].name,
-                    'email':data[0].email,
-                    'new':item.new
-                };
-                count++;
-            }
-            
-            if(count == follow_list.length )
-            {
-                res.status(200).json({"feed_list":feed_list});
-            }
+    user.find({'email':req.body},{'follow_list'},(error,data)=>{
+        if(error){
+            return res.status(404).json({message: "user not found"});
+        }
+        const follow_list = data[0];
+        follow_list.forEach((item,key) => {
+            user.find({'email':item.name},(error,data)=>{
+                if(error){
+                    return res.status(404).json({message: "user not found"});
+                } else if(data.length == 0)
+                {
+                    return res.status(404).json({message: "user not found"});
+                } else{
+                    feed_list[key] = {
+                        'photo':data[0].photo,
+                        'name':data[0].name,
+                        'email':data[0].email,
+                        'new':item.new
+                    };
+                    count++;
+                }
                 
-        });
-    });   
+                if(count == follow_list.length )
+                {
+                    res.status(200).json({"feed_list":feed_list});
+                }
+                    
+            });
+        });   
+    });
+
+    
 });
 
 //get whole user list
@@ -243,6 +251,7 @@ router.route('/getUser').post((req, res, next) => {
 
 //update user follow_list
 router.route('/updateUserFollowList').post((req, res, next) => {
+
     user.findOneAndUpdate({email:req.body.user.email}, {$set:{follow_list:req.body.user.follow_list}},{new:true},(err, data)=>{
         if(err){
             return res.status(404).json({message: "user not found"});
