@@ -231,13 +231,24 @@ router.route('/getUserList').post((req, res, next) => {
 
 //get user info
 router.route('/getUser').post((req, res, next) => {
-    user.find({'email':req.body.email},['email','name','photo','is_public'],(error,data)=>{
+    user.find({'email':req.body.email},['email','name','photo','is_public','follow_list'],(error,data)=>{
         if(error){
             return res.status(404).json({message: "user not found"});
         } else{
             return res.status(200).json({"data":data});
         }
             
+    });
+});
+
+//update user follow_list
+router.route('/updateUserFollowList').post((req, res, next) => {
+    user.findOneAndUpdate({email:req.body.user.email}, {$set:{follow_list:req.body.user.follow_list}},{new:true},(err, data)=>{
+        if(err){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            return res.status(200).json({"data":data});
+        }
     });
 });
 
