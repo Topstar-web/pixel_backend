@@ -7,7 +7,7 @@ let mongoose = require('mongoose'),
 
 let user = require('../models/user-schema');
 let reaction = require('../models/reaction-schema');
-let block_user = require('../models/block-schema');
+let flag_history = require('../models/flag-schema');
 
 //check Login
 router.route('/check').post((req,res,next) => {
@@ -321,13 +321,27 @@ router.route('/blockUser').post((req, res, next) => {
 
 //flag user
 router.route('/flagUser').post((req, res, next) => {
-    user.update({email:req.body.email},{$inc:{flag_user:1}},{new:true},(err,data) => {
-        if(err){
-            return res.status(404).json({message: "user not found"});
-        } else{
-            return res.status(200).json({message:"success",data:data});
+    //check number 3?
+    flag_history.countDocument({email:req.body.email,flag_type:req.body.flag_type},(err,count)=>{
+        if(count == 2)
+        {
+            // remove user
+            user.remove({email:req.body.email});
+            return res.status(200).json({message:"Removed"})
         }
     });
+
+    flag_history.create({
+        email:req.body.email,
+        action_email:req.body.action_email,
+        type:req.body.flag_type
+    }, (error, data) => {
+        if (error) {
+            res.status(502).json({message: "error while creating user"});
+        } else {
+            res.status(200).json({message:"Add success~!"})
+        }
+    })
 });
 
 
