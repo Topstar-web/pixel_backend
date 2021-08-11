@@ -24,6 +24,14 @@ let userSchema = new Schema({
     },
     block_list: {
         type:Array
+    },
+    flag_user:{
+        type:Number,
+        default:0
+    },
+    flag_content:{
+        type:Number,
+        default:0
     }
 }, {
         collection: 'users'
