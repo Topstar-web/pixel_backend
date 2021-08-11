@@ -322,8 +322,8 @@ router.route('/blockUser').post((req, res, next) => {
 //flag user
 router.route('/flagUser').post((req, res, next) => {
     //check number 3?
-    flag_history.count({email:req.body.email,flag_type:req.body.flag_type},(err,count)=>{
-        return res.status(200).json({message:count});
+    flag_history.find({email:req.body.email,flag_type:req.body.flag_type},(err,data)=>{
+        return res.status(200).json({message:data});
         if(count >= 2)
         {
             // remove user
