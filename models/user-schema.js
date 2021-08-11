@@ -21,6 +21,9 @@ let userSchema = new Schema({
     },
     follow_list: {
         type:Array
+    },
+    block_list: {
+        type:Array
     }
 }, {
         collection: 'users'

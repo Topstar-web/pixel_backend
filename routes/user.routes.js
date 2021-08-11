@@ -308,17 +308,15 @@ router.route('/removeFollowUser').post((req, res, next) => {
 
 // block user
 router.route('/blockUser').post((req, res, next) => {
-    block_user.create({
-        email:req.body.email,
-        blocked_email:req.body.blocked_email
-    }, (error, data) => {
-        if (error) {
-            return res.status(502).json({message: "error while blocking user"});
-        } else {
-            // if(req.body.fStatus) removeFollowFunc(req.body.email,req.body.blocked_email);
-            return res.status(200).json({message:"success"})
+    user.update({email:req.body.email},{$pull:{follow_list:{
+        name : req.body.blocked_email
+    }},$push:{block_list:req.body.blocked_email}},(err,data) => {
+        if(err){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            return res.status(200).json({message:"success"});
         }
-    })
+    });
 });
 
 module.exports = router;
