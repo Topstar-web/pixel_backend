@@ -195,6 +195,7 @@ router.route('/get_users').post((req, res, next) => {
         if(error){
             return res.status(404).json({message: "user not found"});
         }
+        return res.status(200).json({"feed_list":data});
         const follow_list = data[0];
         follow_list.forEach((item,key) => {
             user.find({'email':item.name},(error,data)=>{
