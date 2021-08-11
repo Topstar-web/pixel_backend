@@ -322,14 +322,14 @@ router.route('/blockUser').post((req, res, next) => {
 //flag user
 router.route('/flagUser').post((req, res, next) => {
     //check number 3?
-    // flag_history.countDocument({email:req.body.email,flag_type:req.body.flag_type},(err,count)=>{
-    //     if(count == 2)
-    //     {
-    //         // remove user
-    //         user.remove({email:req.body.email});
-    //         return res.status(200).json({message:"Removed"})
-    //     }
-    // });
+    flag_history.countDocument({email:req.body.email,flag_type:req.body.flag_type},(err,count)=>{
+        if(count == 2)
+        {
+            // remove user
+            user.remove({email:req.body.email});
+            return res.status(200).json({message:"Removed"})
+        }
+    });
 
     flag_history.create({
         email:req.body.email,
