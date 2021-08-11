@@ -7,6 +7,7 @@ let mongoose = require('mongoose'),
 
 let user = require('../models/user-schema');
 let reaction = require('../models/reaction-schema');
+let block_user = require('../models/block-schema');
 
 //check Login
 router.route('/check').post((req,res,next) => {
@@ -311,7 +312,7 @@ router.route('/removeFollowUser').post((req, res, next) => {
 
 // block user
 router.route('/blockUser').post((req, res, next) => {
-    user.create({
+    block_user.create({
         email:req.body.email,
         blocked_email:req.body.blocked_email
     }, (error, data) => {
