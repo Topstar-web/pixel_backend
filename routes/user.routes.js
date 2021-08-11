@@ -191,24 +191,21 @@ router.route('/get_users').post((req, res, next) => {
     // const follow_list = req.body;
     let feed_list = [];
     let count = 0;
-    user.find({'email':req.body.email},['follow_list'],(error,data)=>{
+    user.find({'email':req.body.email},(error,data)=>{
         if(error){
             return res.status(404).json({message: "user not found"});
         }
-        return res.status(200).json({"feed_list":data}); 
-        const follow_list = data[0];
+        // return res.status(200).json({"feed_list":data}); 
+        const follow_list = data[0].follow_list;
         follow_list.forEach((item,key) => {
             user.find({'email':item.name},(error,data)=>{
                 if(error){
-                    return res.status(404).json({message: "user not found"});
-                } else if(data.length == 0)
-                {
                     return res.status(404).json({message: "user not found"});
                 } else{
                     feed_list[key] = {
                         'photo':data[0].photo,
                         'name':data[0].name,
-                        'email':data[0].email,
+                        'email':item.name,
                         'new':item.new
                     };
                     count++;
