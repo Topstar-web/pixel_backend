@@ -205,6 +205,7 @@ router.route('/get_users').post((req, res, next) => {
             return res.status(404).json({message: "user not found"});
         }
         // return res.status(200).json({"feed_list":data}); 
+        const nowUser = data[0];
         const follow_list = data[0].follow_list;
         follow_list.forEach((item,key) => {
             user.find({'email':item.name},(error,data)=>{
@@ -222,7 +223,7 @@ router.route('/get_users').post((req, res, next) => {
                 
                 if(count == follow_list.length )
                 {
-                    res.status(200).json({"feed_list":feed_list});
+                    res.status(200).json({"feed_list":feed_list,"user":nowUser});
                 }
                     
             });
@@ -264,6 +265,20 @@ router.route('/updateUserFollowList').post((req, res, next) => {
             return res.status(404).json({message: "user not found"});
         } else{
             return res.status(200).json({"data":data});
+        }
+    });
+});
+
+// add follow user
+router.route('/addFollowUser').post((req, res, next) => {
+    user.update({email:req.body.email},{$push:{follow_list:{
+        name : req.body.add_email,
+        new : false
+    }}},(err,data) => {
+        if(err){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            return res.status(200).json({message:"success"});
         }
     });
 });
