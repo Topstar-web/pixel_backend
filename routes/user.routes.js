@@ -138,6 +138,15 @@ router.route('/update_photo').post((req, res, next) => {
     });
 });
 
+// set new status to false
+router.route('/removeNewStatus').post((req,res,next) => {
+    user.update({'email':req.body.email,'follow_list.name':req.body.follower},{'$set':{'follow_list.$.new':false}},(error,data)=>{
+        if(error)
+            return res.status(500).json({message: "error while updating photo"});
+        return res.status(200).json({message:"success"});  
+    });
+});
+
 //get reaction_history
 router.route('/getReactionHistory').post((req,res,next) => {
     reaction.aggregate([
