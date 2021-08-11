@@ -180,28 +180,13 @@ router.route('/getReactionHistory').post((req,res,next) => {
 
 //get reaction_data
 router.route('/getReaction').post((req,res,next) => {
-    // reaction.find({'email':req.body.email},(error,data)=>{
-    //     if(error){
-    //         return res.status(404).json({message: "user not found"});
-    //     } else{
-    //        return res.status(200).json({"data":data});
-    //     }   
-    // });
-    user.aggregate([
-        {
-            $match: {
-                email: req.body.email
-            }
-        }, {
-            $lookup: {
-                from: "reactions",
-                localField: "email",
-                foreignField: "email",
-                as: "reactions"
-            }
-        }]).exec((err,data)=>{
-            return res.status(200).json({"data":data});
-        });
+    reaction.find({'email':req.body.email},(error,data)=>{
+        if(error){
+            return res.status(404).json({message: "user not found"});
+        } else{
+           return res.status(200).json({"data":data});
+        }   
+    });
 });
 
 //add reaction_data
