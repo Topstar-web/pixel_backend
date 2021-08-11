@@ -322,7 +322,7 @@ router.route('/blockUser').post((req, res, next) => {
 //flag user
 router.route('/flagUser').post((req, res, next) => {
     //check number 3?
-    flag_history.countDocument({email:req.body.email,flag_type:req.body.flag_type},(err,count)=>{
+    flag_history.count({email:req.body.email,flag_type:req.body.flag_type},(err,count)=>{
         if(count == 2)
         {
             // remove user
@@ -345,17 +345,17 @@ router.route('/flagUser').post((req, res, next) => {
 });
 
 //get flagged status
-// router.route('/getFlagStatus').post((req, res, next) => {
-//     flag_history.find({'email':decodedToken.email},(error,data)=>{
-//         if(error){
-//             return res.status(404).json({message: "user not found"});
-//         } else{
-//             // password hash
-//             if(data.length == 0)
-//                 return res.status(404).json({message: "user not found"});
-//             res.status(200).json({ message: 'here is your resource' , "user":data[0]});
-//         }
-//     });  
-// });
+router.route('/getFlagStatus').post((req, res, next) => {
+    flag_history.find({'email':decodedToken.email},(error,data)=>{
+        if(error){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            // password hash
+            if(data.length == 0)
+                return res.status(404).json({message: "user not found"});
+            res.status(200).json({ message: 'here is your resource' , "user":data[0]});
+        }
+    });  
+});
 
 module.exports = router;
