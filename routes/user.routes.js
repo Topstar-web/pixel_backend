@@ -322,8 +322,7 @@ router.route('/blockUser').post((req, res, next) => {
 //flag user
 router.route('/flagUser').post((req, res, next) => {
     //check number 3?
-    flag_history.find({email:req.body.email,flag_type:req.body.flag_type},(err,data)=>{
-        return res.status(200).json({message:data});
+    flag_history.count({email:req.body.email,flag_type:req.body.flag_type},(err,count)=>{
         if(count >= 2)
         {
             // remove user
@@ -335,7 +334,7 @@ router.route('/flagUser').post((req, res, next) => {
     flag_history.create({
         email:req.body.email,
         action_email:req.body.action_email,
-        type:req.body.flag_type
+        flag_type:req.body.flag_type
     }, (error, data) => {
         if (error) {
             res.status(502).json({message: "error while creating user"});
