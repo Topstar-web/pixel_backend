@@ -187,12 +187,12 @@ router.route('/getReaction').post((req,res,next) => {
         } else{
             let fUser = false;
             let fCont = false;
-            flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:req.body.flag_type},(err,count)=>{
+            flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:1},(err,count)=>{
                 if(count > 0)
                     fUser = true;
             }); 
 
-            flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:req.body.flag_type},(err,count)=>{
+            flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:2},(err,count)=>{
                 if(count > 0)
                     fCont = true;
             }); 
