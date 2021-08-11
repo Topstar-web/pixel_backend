@@ -321,11 +321,11 @@ router.route('/blockUser').post((req, res, next) => {
 
 //flag user
 router.route('/flagUser').post((req, res, next) => {
-    user.update({email:req.body.email},{$inc:{flag_user:1}},(err,data) => {
+    user.update({email:req.body.email},{$inc:{flag_user:1}},{new:true},(err,data) => {
         if(err){
             return res.status(404).json({message: "user not found"});
         } else{
-            return res.status(200).json({message:"success"});
+            return res.status(200).json({message:"success",data:data});
         }
     });
 });
