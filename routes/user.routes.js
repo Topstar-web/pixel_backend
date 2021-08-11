@@ -58,7 +58,16 @@ router.route('/signup').post((req, res, next) => {
                             if (error) {
                                 res.status(502).json({message: "error while creating user"});
                             } else {
-                                res.status(200).json({message:"SignUp Success~!", "email":req.body.email})
+                                // res.status(200).json({message:"SignUp Success~!", "email":req.body.email})
+                                const token = jwt.sign({ email: req.body.email }, 'secret');
+                                res.status(200).json({message: "Welcome", "token": token, "user":{
+                                    email:req.body.email,
+                                    password:passwordHash,
+                                    name:req.body.name,
+                                    photo:'',
+                                    is_public:true,
+                                    follow_list:[{'name':req.body.email,'new':false}]
+                                }});
                             }
                         })
                     }
