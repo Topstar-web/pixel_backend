@@ -293,9 +293,10 @@ router.route('/addFollowUser').post((req, res, next) => {
     });
 });
 
-const removeFollowFunc = (email,remove_email) => {
-    user.update({email:email},{$pull:{follow_list:{
-        name : remove_email
+// remove follow user
+router.route('/removeFollowUser').post((req, res, next) => {
+    user.update({email:req.body.email},{$pull:{follow_list:{
+        name : req.body.remove_email
     }}},(err,data) => {
         if(err){
             return res.status(404).json({message: "user not found"});
@@ -303,11 +304,6 @@ const removeFollowFunc = (email,remove_email) => {
             return res.status(200).json({message:"success"});
         }
     });
-}
-
-// remove follow user
-router.route('/removeFollowUser').post((req, res, next) => {
-    removeFollowFunc(req.body.email,req.body.remove_email);
 });
 
 // block user
@@ -319,7 +315,7 @@ router.route('/blockUser').post((req, res, next) => {
         if (error) {
             return res.status(502).json({message: "error while blocking user"});
         } else {
-            if(req.body.fStatus) removeFollowFunc(req.body.email,req.body.blocked_email);
+            // if(req.body.fStatus) removeFollowFunc(req.body.email,req.body.blocked_email);
             return res.status(200).json({message:"success"})
         }
     })
