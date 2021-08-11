@@ -185,7 +185,18 @@ router.route('/getReaction').post((req,res,next) => {
         if(error){
             return res.status(404).json({message: "user not found"});
         } else{
-           return res.status(200).json({"data":data});
+            let fUser = false;
+            let fCont = false;
+            flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:req.body.flag_type},(err,count)=>{
+                if(count > 0)
+                    fUser = true;
+            }); 
+
+            flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:req.body.flag_type},(err,count)=>{
+                if(count > 0)
+                    fCont = true;
+            }); 
+            return res.status(200).json({"data":data,"fUser":fUser,"fCont":fCont});
         }   
     });
 });
@@ -342,22 +353,6 @@ router.route('/flagUser').post((req, res, next) => {
             res.status(200).json({message:1})
         }
     })
-});
-
-//get flagged status
-router.route('/getFlagStatus').post((req, res, next) => {
-    let fUser = false;
-    let fCont = false;
-    flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:req.body.flag_type},(err,count)=>{
-        if(count > 0)
-            fUser = true;
-    }); 
-
-    flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:req.body.flag_type},(err,count)=>{
-        if(count > 0)
-            fCont = true;
-    }); 
-    return res.status(200).json({fUser:fUser,fCont:fCont});
 });
 
 module.exports = router;
