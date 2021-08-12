@@ -344,7 +344,16 @@ router.route('/flagUser').post((req, res, next) => {
                     if(err){
                         return res.status(404).json({message: "user not found"});
                     }
-                    return res.status(200).json({message:2});
+                    user.updateMany({'block_list':req.body.email},{$pull:{block_list:req.body.email}},(err,data) => {
+                        if(err){
+                            return res.status(404).json({message: "user not found"});
+                        }
+                        reaction.remove({$or:[{email:req.body.email},{react_email:req.body.email}]},(err,data)=>{
+                            if(err)
+                                return res.status(404).json({message:"cannot remove reaction"});
+                            return res.status(200).json({message:"totally removed"});
+                        });
+                    });
                 });
                 
             });
