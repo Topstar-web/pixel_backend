@@ -354,6 +354,17 @@ router.route('/addFollowUser').post((req, res, next) => {
     });
 });
 
+// unblock User
+router.route('/unBlockUser').post((req, res, next) => {
+    user.update({email:req.body.email},{$push:{block_list:req.body.blocked_email}},(err,data) => {
+        if(err){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            return res.status(200).json({message:"success"});
+        }
+    });
+});
+
 // remove follow user
 router.route('/removeFollowUser').post((req, res, next) => {
     user.update({email:req.body.email},{$pull:{follow_list:{
