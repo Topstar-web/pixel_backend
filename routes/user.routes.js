@@ -53,7 +53,7 @@ router.route('/signup').post((req, res, next) => {
                         user.create({
                             email:req.body.email,
                             password:passwordHash,
-                            name:req.body.name,
+                            name:req.body.capName,
                             follow_list:[{'name':req.body.email,'new':false}]
                         }, (error, data) => {
                             if (error) {
@@ -64,7 +64,7 @@ router.route('/signup').post((req, res, next) => {
                                 res.status(200).json({message: "Welcome", "token": token, "user":{
                                     email:req.body.email,
                                     password:passwordHash,
-                                    name:req.body.name,
+                                    name:req.body.capName,
                                     photo:'',
                                     is_public:true,
                                     follow_list:[{'name':req.body.email,'new':false}]
