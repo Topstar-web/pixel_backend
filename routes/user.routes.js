@@ -337,7 +337,16 @@ router.route('/flagUser').post((req, res, next) => {
             user.remove({email:req.body.email},(err,data)=>{
                 if(err)
                     return res.status(404).json({message:"cannot remove user"});
-                return res.status(200).json({message:2})
+                    
+                user.updateMany({'follow_list.name':req.body.email},{$pull:{follow_list:{
+                    name : req.body.email
+                }}},(err,data) => {
+                    if(err){
+                        return res.status(404).json({message: "user not found"});
+                    }
+                    return res.status(200).json({message:2});
+                });
+                
             });
             
         }
