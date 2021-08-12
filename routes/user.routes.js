@@ -150,7 +150,7 @@ router.route('/changePasswordUser').post((req, res, next) => {
                             }
                         });
                     }
-                }
+                });
                 
             }
         });
