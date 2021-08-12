@@ -337,6 +337,13 @@ router.route('/blockUser').post((req, res, next) => {
         }
     });
 });
+// remove user
+router.route('/delUser').post((req, res, next) => {
+    user.remove({email:req.body.email},(err,data)=>{
+        if(err) return res.status(404).json({message: "user not found"});
+        return res.status(200).json({message:"success"});
+    });
+});
 
 //flag user
 router.route('/flagUser').post((req, res, next) => {
