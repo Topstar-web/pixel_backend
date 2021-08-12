@@ -320,7 +320,7 @@ router.route('/saveUserProfile').post((req, res, next) => {
         if(err){
             return res.status(404).json({message: "user not found"});
         } else{
-            return res.status(200).json({"data":data});
+            return res.status(200).json({message:"success"});
         }
     });
 });
