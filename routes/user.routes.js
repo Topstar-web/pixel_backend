@@ -334,26 +334,29 @@ router.route('/flagUser').post((req, res, next) => {
         if(count >= 2)
         {
             // remove user
-            user.deleteOne({email:req.body.email},(err,data)=>{
+            user.remove({email:req.body.email},(err,data)=>{
                 if(err)
                     return res.status(404).json({message:"cannot remove user"});
                 return res.status(200).json({message:2})
             });
             
         }
+        else{
+            flag_history.create({
+                email:req.body.email,
+                action_email:req.body.action_email,
+                flag_type:req.body.flag_type
+            }, (error, data) => {
+                if (error) {
+                    res.status(502).json({message: "error while creating user"});
+                } else {
+                    res.status(200).json({message:1})
+                }
+            })
+        }
     });
 
-    flag_history.create({
-        email:req.body.email,
-        action_email:req.body.action_email,
-        flag_type:req.body.flag_type
-    }, (error, data) => {
-        if (error) {
-            res.status(502).json({message: "error while creating user"});
-        } else {
-            res.status(200).json({message:1})
-        }
-    })
+    
 });
 
 module.exports = router;
