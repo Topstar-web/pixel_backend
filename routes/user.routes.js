@@ -154,7 +154,25 @@ router.route('/changePasswordUser').post((req, res, next) => {
             };
         });
     });
-    
+});
+
+//get block list data
+router.route('/getBlockList').post((req,res,next) => {
+    user.aggregate([
+        {
+            $match: {
+                email: req.body.email
+            }
+        },  {
+            $lookup: {
+                from: "users",
+                localField: "block_list",
+                foreignField: "email",
+                as: "user"
+            }
+        }]).exec((err,data)=>{
+            return res.status(200).json({"data":data});
+        });
 });
 
 //update user photo
@@ -212,6 +230,7 @@ router.route('/getReactionHistory').post((req,res,next) => {
             return res.status(200).json({"data":data});
         });
 });
+
 
 //get reaction_data
 router.route('/getReaction').post((req,res,next) => {
