@@ -314,6 +314,17 @@ router.route('/removeFollowUser').post((req, res, next) => {
     });
 });
 
+// save user profile
+router.route('/saveUserProfile').post((req, res, next) => {
+    user.findOneAndUpdate({email:req.body.user.email}, {$set:{is_public:req.body.userType,name:req.body.userName}},{new:true},(err, data)=>{
+        if(err){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            return res.status(200).json({"data":data});
+        }
+    });
+});
+
 // block user
 router.route('/blockUser').post((req, res, next) => {
     user.update({email:req.body.email},{$pull:{follow_list:{
