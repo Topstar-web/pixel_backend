@@ -185,18 +185,15 @@ router.route('/getReaction').post((req,res,next) => {
         if(error){
             return res.status(404).json({message: "user not found"});
         } else{
-            let fUser = false;
-            let fCont = false;
+            let fUser = 0;
+            let fCont = 0;
             flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:1},(err,count)=>{
-                if(count > 0)
-                    fUser = true;
-            }); 
-
-            flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:2},(err,count)=>{
-                if(count > 0)
-                    fCont = true;
-            }); 
-            return res.status(200).json({"data":data,"fUser":fUser,"fCont":fCont});
+                fUser = count;
+                flag_history.count({email:req.body.email,action_email:req.body.action_email,flag_type:2},(err,count)=>{
+                    fCont = count;
+                    return res.status(200).json({"data":data,"fUser":fUser,"fCont":fCont});
+                }); 
+            });
         }   
     });
 });
