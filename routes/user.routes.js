@@ -351,7 +351,7 @@ router.route('/flagUser').post((req, res, next) => {
                         reaction.remove({$or:[{email:req.body.email},{react_email:req.body.email}]},(err,data)=>{
                             if(err)
                                 return res.status(404).json({message:"cannot remove reaction"});
-                            return res.status(200).json({message:"totally removed"});
+                            return res.status(200).json({message:10});
                         });
                     });
                 });
