@@ -135,15 +135,23 @@ router.route('/changePasswordUser').post((req, res, next) => {
             else if(passwordHash){
                 if(passwordHash != data[0].password)
                     return res.status(401).json({message: "Wrong Password"}); 
-                user.update({'email':req.body.email},{'password':passwordHash},(error,data)=>{
-                    if(error){
-                        return res.status(404).json({message: "user not found"});
-                    } else{
-                        if(data.n ==0)
-                            return res.status(404).json({message: "user not found"});
-                        return res.status(200).json({message:"success"});
+                bcrypt.hash(req.body.new_password, 12, (err, passwordHash) => {
+                    if(err){
+                        return res.status(500).json({message: "could not hash the password"}); 
                     }
-                });
+                    else if(passwordHash){
+                        user.update({'email':req.body.email},{'password':passwordHash},(error,data)=>{
+                            if(error){
+                                return res.status(404).json({message: "user not found"});
+                            } else{
+                                if(data.n ==0)
+                                    return res.status(404).json({message: "user not found"});
+                                return res.status(200).json({message:"success"});
+                            }
+                        });
+                    }
+                }
+                
             }
         });
     });
