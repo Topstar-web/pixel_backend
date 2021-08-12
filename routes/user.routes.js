@@ -337,11 +337,32 @@ router.route('/blockUser').post((req, res, next) => {
         }
     });
 });
+
 // remove user
 router.route('/delUser').post((req, res, next) => {
+    // remove user
     user.remove({email:req.body.email},(err,data)=>{
-        if(err) return res.status(404).json({message: "user not found"});
-        return res.status(200).json({message:"success"});
+        if(err)
+            return res.status(404).json({message:"cannot remove user"});
+            
+        user.updateMany({'follow_list.name':req.body.email},{$pull:{follow_list:{
+            name : req.body.email
+        }}},(err,data) => {
+            if(err){
+                return res.status(404).json({message: "user not found"});
+            }
+            user.updateMany({'block_list':req.body.email},{$pull:{block_list:req.body.email}},(err,data) => {
+                if(err){
+                    return res.status(404).json({message: "user not found"});
+                }
+                reaction.remove({$or:[{email:req.body.email},{react_email:req.body.email}]},(err,data)=>{
+                    if(err)
+                        return res.status(404).json({message:"cannot remove reaction"});
+                    return res.status(200).json({message:10});
+                });
+            });
+        });
+        
     });
 });
 
