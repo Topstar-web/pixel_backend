@@ -316,7 +316,7 @@ router.route('/removeFollowUser').post((req, res, next) => {
 
 // save user profile
 router.route('/saveUserProfile').post((req, res, next) => {
-    user.findOneAndUpdate({email:req.body.user.email}, {$set:{is_public:req.body.userType,name:req.body.userName}},{new:true},(err, data)=>{
+    user.findOneAndUpdate({email:req.body.user.email}, {$set:{"is_public":req.body.userType,"name":req.body.userName}},{new:true},(err, data)=>{
         if(err){
             return res.status(404).json({message: "user not found"});
         } else{
