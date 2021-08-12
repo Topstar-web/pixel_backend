@@ -128,13 +128,11 @@ router.route('/reset_password').post((req, res, next) => {
 router.route('/changePasswordUser').post((req, res, next) => {
     user.find({'email':req.body.email},["password"],(err,data)=>{
         if(err || data.length == 0) return res.status(404).json({message: "user not found"});
-        bcrypt.hash(req.body.password, 12, (err, passwordHash) => {
-            if(err){
-                return res.status(500).json({message: "could not hash the password"}); 
-            }
-            else if(passwordHash){
-                if(passwordHash != data[0].password)
-                    return res.status(401).json({message: "Wrong Password"}); 
+
+        bcrypt.compare(req.body.password, data[0]['password'], (err, compareRes) => {
+            if (err) { // error while comparing
+                res.status(502).json({message: "error while checking user password"});
+            } else if (compareRes) { // password match
                 bcrypt.hash(req.body.new_password, 12, (err, passwordHash) => {
                     if(err){
                         return res.status(500).json({message: "could not hash the password"}); 
@@ -151,8 +149,9 @@ router.route('/changePasswordUser').post((req, res, next) => {
                         });
                     }
                 });
-                
-            }
+            } else { // password doesnt match
+                res.status(401).json({message: "Wrong Password"});
+            };
         });
     });
     
