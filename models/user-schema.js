@@ -23,7 +23,8 @@ let userSchema = new Schema({
         type:Array
     },
     block_list: {
-        type:Array
+        type:Array,
+        default:[]
     }
 }, {
         collection: 'users'
