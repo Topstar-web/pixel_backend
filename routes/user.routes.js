@@ -354,7 +354,7 @@ router.route('/addFollowUser').post((req, res, next) => {
         name : req.body.add_email,
         new : false,
         fdate : new Date(),
-        type : req.body.email?1:0
+        type : req.body.add_type?1:0
     }}},(err,data) => {
         if(err){
             return res.status(404).json({message: "user not found"});
