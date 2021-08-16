@@ -54,7 +54,14 @@ router.route('/signup').post((req, res, next) => {
                             email:req.body.email,
                             password:passwordHash,
                             name:req.body.capName,
-                            follow_list:[{'name':req.body.email,'new':false}]
+                            follow_list:[
+                                {
+                                    'name':req.body.email,
+                                    'new':false,
+                                    'fdate':new Date(),
+                                    'type':1
+                                }
+                            ]
                         }, (error, data) => {
                             if (error) {
                                 res.status(502).json({message: "error while creating user"});
