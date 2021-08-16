@@ -314,7 +314,7 @@ router.route('/get_users').post((req, res, next) => {
 
 //get whole user list
 router.route('/getUserList').post((req, res, next) => {
-    user.find({},['email','name','photo','is_public'],(error,data)=>{
+    user.find({},['email','name','photo','is_public','follow_list','block_list'],(error,data)=>{
         if(error){
             return res.status(404).json({message: "user not found"});
         } else{
