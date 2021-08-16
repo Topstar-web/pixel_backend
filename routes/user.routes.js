@@ -74,7 +74,13 @@ router.route('/signup').post((req, res, next) => {
                                     name:req.body.capName,
                                     photo:'',
                                     is_public:true,
-                                    follow_list:[{'name':req.body.email,'new':false}]
+                                    follow_list:[
+                                        {
+                                            'name':req.body.email,
+                                            'new':false,
+                                            'fdate':new Date(),
+                                            'type':1
+                                        }]
                                 }});
                             }
                         })
@@ -333,18 +339,6 @@ router.route('/getUser').post((req, res, next) => {
             return res.status(200).json({"data":data});
         }
             
-    });
-});
-
-//update user follow_list
-router.route('/updateUserFollowList').post((req, res, next) => {
-
-    user.findOneAndUpdate({email:req.body.user.email}, {$set:{follow_list:req.body.user.follow_list}},{new:true},(err, data)=>{
-        if(err){
-            return res.status(404).json({message: "user not found"});
-        } else{
-            return res.status(200).json({"data":data});
-        }
     });
 });
 
