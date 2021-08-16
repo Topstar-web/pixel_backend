@@ -294,7 +294,8 @@ router.route('/get_users').post((req, res, next) => {
                         'photo':data[0].photo,
                         'name':data[0].name,
                         'email':item.name,
-                        'new':item.new
+                        'new':item.new,
+                        'is_public':data[0].is_public
                     };
                     count++;
                 }
@@ -351,7 +352,9 @@ router.route('/updateUserFollowList').post((req, res, next) => {
 router.route('/addFollowUser').post((req, res, next) => {
     user.update({email:req.body.email},{$push:{follow_list:{
         name : req.body.add_email,
-        new : false
+        new : false,
+        fdate : new Date(),
+        type : req.body.email?1:0
     }}},(err,data) => {
         if(err){
             return res.status(404).json({message: "user not found"});
