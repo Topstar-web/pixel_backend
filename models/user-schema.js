@@ -17,7 +17,7 @@ let userSchema = new Schema({
     },
     is_public: {
         type: Boolean,
-        default: true //public
+        default: false // set private by default
     },
     follow_list: {
         type:Array
