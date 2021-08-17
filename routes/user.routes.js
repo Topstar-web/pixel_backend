@@ -8,6 +8,7 @@ let mongoose = require('mongoose'),
 let user = require('../models/user-schema');
 let reaction = require('../models/reaction-schema');
 let flag_history = require('../models/flag-schema');
+let noti_table = require('../models/follower-schema');
 
 //check Login
 router.route('/check').post((req,res,next) => {
@@ -34,6 +35,94 @@ router.route('/check').post((req,res,next) => {
         });    
         
     };
+});
+
+router.route('/accept_follow').post((req, res, next) => {
+    //change noti type
+    noti_table.findOneAndUpdate({email:req.body.email,follower_email:req.body.follower_email}, {$set:{"type":1}},(err, update_data)=>{
+        if(err){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            //send notification to B
+            noti_table.create({
+                email:req.body.follower_email,
+                follower_email:req.body.email,
+                type:2
+            }, (error, data) => {
+                if (error) {
+                    return res.status(502).json({message: "error while creating user"});
+                } else {
+                    user.findOneAndUpdate({email:req.body.follower_email}, {$set:{"noti_status":true}},(err, data)=>{
+                        if(err){
+                            return res.status(404).json({message: "user not found"});
+                        } else{
+                            //set type = 1 in follow_list of B
+                            user.updateMany({'email':req.body.follower_email,'follow_list.name':req.body.email},{'$set':{'follow_list.$.type':1}},(error,data)=>{
+                                if(error)
+                                    return res.status(500).json({message: "error while set type = 1 in follow_list"});
+                                else{
+                                    return res.status(200).json({message:"success"});
+                                }
+                            });
+                        }
+                    });
+                }
+            })
+        }
+    });
+});
+
+router.route('/decline_follow').post((req, res, next) => {
+    
+    //remove from feed_list
+    user.update({email:req.body.follower_email},{$pull:{follow_list:{
+        name : req.body.email
+    }}},(err,data) => {
+        if(err){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            // remove from noti_table
+            noti_table.remove({'email':req.body.email,'follower_email':req.body.follower_email},(error,data)=>{
+                if(error)
+                    return res.status(500).json({message: "error while reseting reactions"});
+                return res.status(200).json({message:"success"});
+            })
+        }
+    });
+});
+
+router.route('/get_notification_list').post((req, res, next) => {
+
+    user.findOneAndUpdate({email:req.body.email}, {$set:{"noti_status":false}},(err, update_data)=>{
+        if(err){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            noti_table.aggregate([
+                {
+                    $match: {
+                        email: req.body.email
+                    }
+                },  {
+                    $lookup: {
+                        from: "users",
+                        localField: "follower_email",
+                        foreignField: "email",
+                        as: "user"
+                    }
+                }, {
+                    $project:{
+                        "_id":1,
+                        "follower_email":1,
+                        "follow_time":1,
+                        "user.name":1,
+                        "user.photo":1,
+                        "type":1
+                    }
+                },{ $sort: { follow_time: 1 } }]).exec((err,data)=>{
+                    return res.status(200).json({"noti_data":data});
+                });
+        }
+    });
 });
 
 // sign up user
@@ -279,44 +368,64 @@ router.route('/addReaction').post((req,res,next) => {
     })
 });
 
-//get followed user list
 router.route('/get_users').post((req, res, next) => {
-    // const follow_list = req.body;
-    let feed_list = [];
-    let count = 0;
-    user.find({'email':req.body.email},(error,data)=>{
-        if(error){
-            return res.status(404).json({message: "user not found"});
-        }
-        // return res.status(200).json({"feed_list":data}); 
-        const nowUser = data[0];
-        const follow_list = data[0].follow_list;
-        follow_list.forEach((item,key) => {
-            user.find({'email':item.name},(error,data)=>{
-                if(error){
-                    return res.status(404).json({message: "user not found"});
-                } else{
-                    feed_list[key] = {
-                        'photo':data[0].photo,
-                        'name':data[0].name,
-                        'email':item.name,
-                        'new':item.new,
-                        'is_public':data[0].is_public
-                    };
-                    count++;
-                }
+    
+    user.aggregate([
+        {
+            $match: {
+                email: { $in : req.body.follow_list}
+            }
+        },  {
+            $lookup: {
+                from: "reactions",
+                localField: "email",
+                foreignField: "email",
+                as: "reaction"
+            }
+        }]).exec((err,data)=>{
+            
+            return res.status(200).json({"data":data});
+        });
+});
+
+// //get followed user list
+// router.route('/get_users').post((req, res, next) => {
+//     // const follow_list = req.body;
+//     let feed_list = [];
+//     let count = 0;
+//     user.find({'email':req.body.email},(error,data)=>{
+//         if(error){
+//             return res.status(404).json({message: "user not found"});
+//         }
+//         // return res.status(200).json({"feed_list":data}); 
+//         const nowUser = data[0];
+//         const follow_list = data[0].follow_list;
+//         follow_list.forEach((item,key) => {
+//             user.find({'email':item.name},(error,data)=>{
+//                 if(error){
+//                     return res.status(404).json({message: "user not found"});
+//                 } else{
+//                     feed_list[key] = {
+//                         'photo':data[0].photo,
+//                         'name':data[0].name,
+//                         'email':item.name,
+//                         'new':item.new,
+//                         'is_public':data[0].is_public
+//                     };
+//                     count++;
+//                 }
                 
-                if(count == follow_list.length )
-                {
-                    res.status(200).json({"feed_list":feed_list,"user":nowUser});
-                }
+//                 if(count == follow_list.length )
+//                 {
+//                     res.status(200).json({"feed_list":feed_list,"user":nowUser});
+//                 }
                     
-            });
-        });   
-    });
+//             });
+//         });   
+//     });
 
     
-});
+// });
 
 //get whole user list
 router.route('/getUserList').post((req, res, next) => {
@@ -353,7 +462,23 @@ router.route('/addFollowUser').post((req, res, next) => {
         if(err){
             return res.status(404).json({message: "user not found"});
         } else{
-            return res.status(200).json({message:"success"});
+            noti_table.create({
+                email:req.body.add_email,
+                follower_email:req.body.email,
+                type:req.body.add_type?1:0
+            }, (error, data) => {
+                if (error) {
+                    return res.status(502).json({message: "error while creating user"});
+                } else {
+                    user.findOneAndUpdate({email:req.body.add_email}, {$set:{"noti_status":true}},(err, data)=>{
+                        if(err){
+                            return res.status(404).json({message: "user not found"});
+                        } else{
+                            return res.status(200).json({message:"success"});
+                        }
+                    });
+                }
+            })
         }
     });
 });

@@ -19,6 +19,10 @@ let userSchema = new Schema({
         type: Boolean,
         default: false // set private by default
     },
+    noti_status: {
+        type: Boolean,
+        default: false // set no noti by default
+    },
     follow_list: {
         type:Array
     },

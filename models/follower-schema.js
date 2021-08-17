@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let followerSchema = new Schema({
+let notificationSchema = new Schema({
     email: {
         type: String
     },
@@ -16,7 +16,7 @@ let followerSchema = new Schema({
         default: new Date()
     }
 }, {
-        collection: 'followers'
+        collection: 'notifications'
     })
 
-module.exports = mongoose.model('Follower', followerSchema)
+module.exports = mongoose.model('Notification', notificationSchema)

@@ -4,8 +4,8 @@ let cors = require('cors');
 let bodyParser = require('body-parser');
 let database = require('./database/db');
 let createError = require('http-errors');
-let server = require("http").createServer(express);
-const io = require("socket.io")(server);
+let io_server = require("http").createServer();
+const io = require("socket.io")();
 
 const userRoute = require('./routes/user.routes')
 
@@ -38,9 +38,11 @@ io.on("connection", socket => {
 });
 
 const port = process.env.PORT || 4000;
-server = app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log('Connected to port ' + port)
 })
+
+io.listen(3000);
 
 // Error Handling
 app.use((req, res, next) => {
