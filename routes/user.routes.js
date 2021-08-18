@@ -116,7 +116,8 @@ router.route('/get_notification_list').post((req, res, next) => {
                         "follow_time":1,
                         "user.name":1,
                         "user.photo":1,
-                        "type":1
+                        "type":1,
+                        "timeDiff":{ $subtract: [ "$$NOW", "$follow_time" ] } 
                     }
                 },{ $sort: { follow_time: -1 } }]).exec((err,data)=>{
                     return res.status(200).json({"noti_data":data});
