@@ -4,8 +4,6 @@ let cors = require('cors');
 let bodyParser = require('body-parser');
 let database = require('./database/db');
 let createError = require('http-errors');
-let io_server = require("http").createServer();
-const io = require("socket.io")();
 
 const userRoute = require('./routes/user.routes')
 
@@ -29,20 +27,10 @@ app.use(bodyParser.urlencoded({
 app.use(cors());
 app.use('/users', userRoute)
 
-io.on("connection", socket => {
-    console.log("a user connected :D");
-    socket.on("socket_follow_user", msg => {
-        console.log(msg);
-        io.emit("socket_follow_user", msg);
-    });
-});
-
 const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {
     console.log('Connected to port ' + port)
 })
-
-io.listen(3000);
 
 // Error Handling
 app.use((req, res, next) => {
