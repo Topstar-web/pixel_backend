@@ -12,8 +12,7 @@ let notificationSchema = new Schema({
         type: Number
     },
     follow_time: {
-        type: Date,
-        default: new Date()
+        type: Date
     }
 }, {
         collection: 'notifications'

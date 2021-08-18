@@ -47,7 +47,8 @@ router.route('/accept_follow').post((req, res, next) => {
             noti_table.create({
                 email:req.body.follower_email,
                 follower_email:req.body.email,
-                type:2
+                type:2,
+                follow_time:new Date()
             }, (error, data) => {
                 if (error) {
                     return res.status(502).json({message: "error while creating user"});
@@ -477,7 +478,8 @@ router.route('/addFollowUser').post((req, res, next) => {
             noti_table.create({
                 email:req.body.add_email,
                 follower_email:req.body.email,
-                type:req.body.add_type?1:0
+                type:req.body.add_type?1:0,
+                follow_time : new Date()
             }, (error, data) => {
                 if (error) {
                     return res.status(502).json({message: "error while creating user"});
@@ -563,7 +565,11 @@ router.route('/delUser').post((req, res, next) => {
                 reaction.remove({$or:[{email:req.body.email},{react_email:req.body.email}]},(err,data)=>{
                     if(err)
                         return res.status(404).json({message:"cannot remove reaction"});
-                    return res.status(200).json({message:10});
+                     noti_table.remove({$or:[{email:req.body.email},{follower_email:req.body.email}]},(err,data)=>{
+                        if(err)
+                            return res.status(404).json({message:"cannot remove notification"});
+                        return res.status(200).json({message:10});
+                     });
                 });
             });
         });
