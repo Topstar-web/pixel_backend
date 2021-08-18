@@ -39,7 +39,7 @@ router.route('/check').post((req,res,next) => {
 
 router.route('/accept_follow').post((req, res, next) => {
     //change noti type
-    noti_table.findOneAndUpdate({email:req.body.email,follower_email:req.body.follower_email}, {$set:{"type":1}},(err, update_data)=>{
+    noti_table.findOneAndUpdate({_id:req.body.noti_id}, {$set:{"type":1}},(err, update_data)=>{
         if(err){
             return res.status(404).json({message: "user not found"});
         } else{
@@ -82,7 +82,7 @@ router.route('/decline_follow').post((req, res, next) => {
             return res.status(404).json({message: "user not found"});
         } else{
             // remove from noti_table
-            noti_table.remove({'email':req.body.email,'follower_email':req.body.follower_email},(error,data)=>{
+            noti_table.remove({_id:req.body.noti_id},(error,data)=>{
                 if(error)
                     return res.status(500).json({message: "error while reseting reactions"});
                 return res.status(200).json({message:"success"});
