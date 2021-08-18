@@ -118,7 +118,7 @@ router.route('/get_notification_list').post((req, res, next) => {
                         "user.photo":1,
                         "type":1
                     }
-                },{ $sort: { follow_time: 1 } }]).exec((err,data)=>{
+                },{ $sort: { follow_time: -1 } }]).exec((err,data)=>{
                     return res.status(200).json({"noti_data":data});
                 });
         }
@@ -442,6 +442,17 @@ router.route('/getUserList').post((req, res, next) => {
 //get user info
 router.route('/getUser').post((req, res, next) => {
     user.find({'email':req.body.email},['email','name','photo','is_public','follow_list','block_list'],(error,data)=>{
+        if(error){
+            return res.status(404).json({message: "user not found"});
+        } else{
+            return res.status(200).json({"data":data});
+        }
+            
+    });
+});
+//get user info
+router.route('/getUserFollowList').post((req, res, next) => {
+    user.find({'email':req.body.email},['follow_list'],(error,data)=>{
         if(error){
             return res.status(404).json({message: "user not found"});
         } else{
