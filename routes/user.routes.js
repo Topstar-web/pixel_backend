@@ -117,6 +117,7 @@ router.route('/get_notification_list').post((req, res, next) => {
                         "follow_time":1,
                         "user.name":1,
                         "user.photo":1,
+                        "user.is_public":1,
                         "type":1,
                         "timeDiff":{ $subtract: [ "$$NOW", "$follow_time" ] } 
                     }
