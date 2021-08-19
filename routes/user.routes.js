@@ -518,12 +518,11 @@ router.route('/removeFollowUser').post((req, res, next) => {
             return res.status(404).json({message: "user not found"});
         } else{
             // remove from noti_table
-            noti_table.remove({$or:[{email:req.body.email,follower_email:req.body.remove_email},{follower_email:req.body.email,email:req.body.remove_email}]},(err,data)=>{
-                if(err)
-                    return res.status(404).json({message:"cannot remove notification"});
-                return res.status(200).json({message:10});
-             });
-            return res.status(200).json({message:"success"});
+            noti_table.remove({email:req.body.remove_email,follower_email:req.body.email},(error,data)=>{
+                if(error)
+                    return res.status(500).json({message: "error while reseting reactions"});
+                return res.status(200).json({message:"success"});
+            })
         }
     });
 });
