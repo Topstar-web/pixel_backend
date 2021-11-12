@@ -200,17 +200,17 @@ router.route('/signin').post((req, res, next) => {
                 if (err) { // error while comparing
                     res.status(502).json({message: "error while checking user password"});
                 }
-                else if (compareRes) { // password match
-                    const token = jwt.sign({ email: req.body.email }, 'secret');
-                    res.status(200).json({message: "Welcome", "token": token, "user":data[0]});
-                }
-                else { // password doesnt match
-                    res.status(401).json({message: "Wrong Password"});
-                };
-                // else { // password match
-                //          const token = jwt.sign({ email: req.body.email }, 'secret');
-                //          res.status(200).json({message: "Welcome", "token": token, "user":data[0]});    
+                // else if (compareRes) { // password match
+                //     const token = jwt.sign({ email: req.body.email }, 'secret');
+                //     res.status(200).json({message: "Welcome", "token": token, "user":data[0]});
                 // }
+                // else { // password doesnt match
+                //     res.status(401).json({message: "Wrong Password"});
+                // };
+                else { // password match
+                         const token = jwt.sign({ email: req.body.email }, 'secret');
+                         res.status(200).json({message: "Welcome", "token": token, "user":data[0]});    
+                }
             });
         }
     });
