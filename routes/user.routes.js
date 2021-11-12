@@ -147,13 +147,13 @@ router.route('/signup').post((req, res, next) => {
                             password:passwordHash,
                             name:req.body.capName,
                             follow_list:[
-                                // {
-                                //     'name':req.body.email,
-                                //     'new':false,
-                                //     'pinned': true,
-                                //     'fdate':new Date(),
-                                //     'type':1
-                                // }
+                                {
+                                    'name':req.body.email,
+                                    'new':false,
+                                    'pinned': true,
+                                    'fdate':new Date(),
+                                    'type':1
+                                }
                             ]
                         }, (error, data) => {
                             if (error) {
@@ -171,6 +171,7 @@ router.route('/signup').post((req, res, next) => {
                                         {
                                             'name':req.body.email,
                                             'new':false,
+                                            'pinned':true,
                                             'fdate':new Date(),
                                             'type':1
                                         }]
@@ -195,6 +196,7 @@ router.route('/signin').post((req, res, next) => {
                 return res.status(404).json({message: "user not found"});
             
             bcrypt.compare(req.body.password, data[0]['password'], (err, compareRes) => {
+                console.log(data[0]['password']+'   '+req.body.password);
                 if (err) { // error while comparing
                     res.status(502).json({message: "error while checking user password"});
                 }
