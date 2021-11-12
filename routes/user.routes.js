@@ -147,12 +147,13 @@ router.route('/signup').post((req, res, next) => {
                             password:passwordHash,
                             name:req.body.capName,
                             follow_list:[
-                                {
-                                    'name':req.body.email,
-                                    'new':false,
-                                    'fdate':new Date(),
-                                    'type':1
-                                }
+                                // {
+                                //     'name':req.body.email,
+                                //     'new':false,
+                                //     'pinned': true,
+                                //     'fdate':new Date(),
+                                //     'type':1
+                                // }
                             ]
                         }, (error, data) => {
                             if (error) {
@@ -196,13 +197,18 @@ router.route('/signin').post((req, res, next) => {
             bcrypt.compare(req.body.password, data[0]['password'], (err, compareRes) => {
                 if (err) { // error while comparing
                     res.status(502).json({message: "error while checking user password"});
-                } else if (compareRes) { // password match
+                }
+                else if (compareRes) { // password match
                     const token = jwt.sign({ email: req.body.email }, 'secret');
                     res.status(200).json({message: "Welcome", "token": token, "user":data[0]});
-                    
-                } else { // password doesnt match
+                }
+                else { // password doesnt match
                     res.status(401).json({message: "Wrong Password"});
                 };
+                // else { // password match
+                //          const token = jwt.sign({ email: req.body.email }, 'secret');
+                //          res.status(200).json({message: "Welcome", "token": token, "user":data[0]});    
+                // }
             });
         }
     });
@@ -310,6 +316,14 @@ router.route('/removeNewStatus').post((req,res,next) => {
     user.update({'email':req.body.email,'follow_list.name':req.body.follower},{'$set':{'follow_list.$.new':false}},(error,data)=>{
         if(error)
             return res.status(500).json({message: "error while updating photo"});
+        return res.status(200).json({message:"success"});  
+    });
+});
+
+router.route('/setPinUser').post((req,res,next) => {
+    user.update({'email':req.body.email,'follow_list.name':req.body.pin_email},{'$set':{'follow_list.$.pinned':req.body.content}},(error,data)=>{
+        if(error)
+            return res.status(500).json({message: "error while updating user pin"});
         return res.status(200).json({message:"success"});  
     });
 });
@@ -470,6 +484,7 @@ router.route('/addFollowUser').post((req, res, next) => {
     user.update({email:req.body.email},{$push:{follow_list:{
         name : req.body.add_email,
         new : false,
+        pinned: false,
         fdate : new Date(),
         type : req.body.add_type?1:0
     }}},(err,data) => {
