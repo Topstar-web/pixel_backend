@@ -21,7 +21,7 @@ let userSchema = new Schema({
     },
     noti_status: {
         type: Number,
-        default: false // set no noti by default
+        default: 0 // set no noti by default
     },
     follow_list: {
         type:Array
