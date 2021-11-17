@@ -53,7 +53,7 @@ router.route('/accept_follow').post((req, res, next) => {
                 if (error) {
                     return res.status(502).json({message: "error while creating user"});
                 } else {
-                    user.findOneAndUpdate({email:req.body.follower_email}, {$set:{"noti_status":true}},(err, data)=>{
+                    user.findOneAndUpdate({email:req.body.follower_email}, {$inc:{"noti_status":1}},(err, data)=>{
                         if(err){
                             return res.status(404).json({message: "user not found"});
                         } else{
@@ -94,7 +94,7 @@ router.route('/decline_follow').post((req, res, next) => {
 
 router.route('/get_notification_list').post((req, res, next) => {
 
-    user.findOneAndUpdate({email:req.body.email}, {$set:{"noti_status":false}},(err, update_data)=>{
+    user.findOneAndUpdate({email:req.body.email}, {$set:{"noti_status":0}},(err, update_data)=>{
         if(err){
             return res.status(404).json({message: "user not found"});
         } else{
@@ -502,7 +502,7 @@ router.route('/addFollowUser').post((req, res, next) => {
                 if (error) {
                     return res.status(502).json({message: "error while creating user"});
                 } else {
-                    user.findOneAndUpdate({email:req.body.add_email}, {$set:{"noti_status":true}},(err, data)=>{
+                    user.findOneAndUpdate({email:req.body.add_email}, {$inc:{"noti_status":1}},(err, data)=>{
                         if(err){
                             return res.status(404).json({message: "user not found"});
                         } else{

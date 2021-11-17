@@ -20,7 +20,7 @@ let userSchema = new Schema({
         default: false // set private by default
     },
     noti_status: {
-        type: Boolean,
+        type: Number,
         default: false // set no noti by default
     },
     follow_list: {
